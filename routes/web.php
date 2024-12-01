@@ -4,12 +4,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-
-Route::view('profile', 'profile')
-    ->middleware(['auth'])
-    ->name('profile');
+Route::middleware(['auth', 'verified'])
+    ->group(function () {
+        Route::view('dashboard', 'dashboard')->name('dashboard');
+        Route::view('profile', 'profile')->name('profile');
+        Route::view('basic', 'basic')->name('setting.basic');
+        Route::view('user', 'user')->name('setting.user');
+        Route::view('category', 'category')->name('setting.category');
+        Route::view('page', 'page')->name('page');
+        Route::view('historic-site', 'historic-site')->name('historic-site');
+    });
 
 require __DIR__.'/auth.php';
