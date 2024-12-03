@@ -22,13 +22,16 @@ new class extends Component {
     public array $paginates = [10, 25, 50];
     public int $paginate = 10;
     public array $roles;
+    public array $all_roles;
+    public int $filter_role_id = 0;
     public array $status = [0 => 'Inactive', 1 => 'Active'];
 
     public function with(): array
     {
         return [
             'items' => User::query()
-                ->when($this->search <> '', fn($q) => $q->where('email', 'like', '%'.$this->search.'%'))
+                ->when($this->search <> null, fn($q) => $q->where('email', 'like', '%'.$this->search.'%'))
+                ->when($this->filter_role_id != 0, fn($q) => $q->where('role_id', $this->filter_role_id))
                 ->paginate($this->paginate)
         ];
     }
@@ -36,6 +39,14 @@ new class extends Component {
     public function mount()
     {
         $this->roles = [
+            -1 => 'Developer',
+            1 => 'Admin',
+            2 => 'Member',
+            3 => 'User',
+        ];
+
+        $this->all_roles = [
+            0 => 'Semua',
             -1 => 'Developer',
             1 => 'Admin',
             2 => 'Member',
@@ -206,6 +217,7 @@ new class extends Component {
 
         return $this->redirect('/user', navigate: true);
     }
+
     /**
      * Delete User
      * @return void
@@ -218,6 +230,11 @@ new class extends Component {
         return $this->redirect('/user', navigate: true);
     }
 
+    public  function filtered()
+    {
+        $this->resetPage();
+    }
+
     protected function _reset(): void
     {
         $this->reset('id', 'name', 'email', 'password', 'role_id', 'phone', 'address', 'city');
@@ -228,7 +245,10 @@ new class extends Component {
 <div>
     <div class="flex justify-between items-center">
         <div class="flex-1">
-            <x-text-input class="w-96" placeholder="Search..."></x-text-input>
+            <x-text-input wire:model="search" wire:input.debounce.300ms="filtered()" class="w-96" placeholder="Search..."></x-text-input>
+        </div>
+        <div class="flex-1">
+            <x-select class="w-72" :data="$all_roles" wire:model="filter_role_id" wire:change="filtered()"></x-select>
         </div>
         <div class="ml-2">
             <x-create-button x-on:click="$dispatch('open-modal', 'form')">
