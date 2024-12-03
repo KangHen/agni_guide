@@ -29,8 +29,12 @@
 
             <!-- Page Content -->
             <main>
+                <x-alert-message />
+
                 {{ $slot }}
             </main>
         </div>
+
+        @stack('scripts')
     </body>
 </html>

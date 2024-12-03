@@ -227,6 +227,12 @@ new class extends Component {
         $deleted = User::find($this->id)->delete();
         $this->id = 0;
 
+        if ($deleted) {
+            session()->flash('message', 'Deleted Successfully');
+        } else {
+            session()->flash('error', 'Error Deleted');
+        }
+
         return $this->redirect('/user', navigate: true);
     }
 
@@ -243,6 +249,8 @@ new class extends Component {
 ?>
 
 <div>
+    <x-loading />
+
     <div class="flex justify-between items-center">
         <div class="flex-1">
             <x-text-input wire:model="search" wire:input.debounce.300ms="filtered()" class="w-96" placeholder="Search..."></x-text-input>
@@ -309,7 +317,7 @@ new class extends Component {
                     {{ __('Batalkan') }}
                 </x-secondary-button>
 
-                <x-danger-button class="ms-3">
+                <x-danger-button wire:click="delete" class="ms-3">
                     {{ __('Hapus') }}
                 </x-danger-button>
             </div>
