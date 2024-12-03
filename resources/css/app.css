@@ -5,17 +5,28 @@
 @tailwind utilities;
 
 
-.btn-primary {
-    background: #FF3003;
-    border: #FF3003;
-    color: #fff;
+.table {
+    @apply w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400;
 }
 
-.btn-primary:hover {
-    background: #FF5103;
-    border: #FF5103;
+.table thead {
+    @apply text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400;
 }
 
-.btn-primary, .btn-info, .btn-error {
-    color: #fff;
+.table thead th {
+    @apply py-3 px-6;
 }
+
+.table tbody tr {
+    @apply bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600
+}
+
+.table tbody tr:hover {
+    @apply bg-gray-50 dark:bg-gray-800;
+}
+
+.table tbody td {
+    @apply py-3 px-6;
+}
+
+

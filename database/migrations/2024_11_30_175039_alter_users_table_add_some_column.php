@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('city')->nullable();
             $table->integer('is_active')->default(0);
-            $table->integer('role_id')->default(3)->comment('0: Developer, 1: Admin, 2: Member, 3: User');
+            $table->integer('role_id')->default(3)->comment('-1: Developer, 1: Admin, 2: Member, 3: User');
             $table->softDeletesTz();
         });
     }
