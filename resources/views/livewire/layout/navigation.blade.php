@@ -45,9 +45,6 @@ $logout = function (Logout $logout) {
                                 <x-dropdown-link :href="route('setting.user')" wire:navigate>
                                     {{ __('User') }}
                                 </x-dropdown-link>
-                                <x-dropdown-link :href="route('setting.basic')" wire:navigate>
-                                    {{ __('Basic') }}
-                                </x-dropdown-link>
                                 <x-dropdown-link :href="route('setting.category')" wire:navigate>
                                     {{ __('Kategori') }}
                                 </x-dropdown-link>

@@ -10,6 +10,7 @@ new class extends Component {
 
     public string|null $search = null;
     public int $id = 0;
+    public int $no = 1;
     public string $name = '';
     public string $email = '';
     public string $password = '';
@@ -52,6 +53,10 @@ new class extends Component {
             2 => 'Member',
             3 => 'User',
         ];
+
+        if (request()->get('page') > 1) {
+            $this->no = ((request()->get('page')-1)*$this->paginate) + 1;
+        }
     }
 
     /**
@@ -275,13 +280,13 @@ new class extends Component {
                 <th>Role</th>
                 <th>Email</th>
                 <th>Aktif</th>
-                <th>#</th>
+                <th class="w-40">#</th>
             </tr>
             </thead>
             <tbody>
             @forelse($items as $item)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $no++ }}</td>
                     <td>{{ $item->name }}</td>
                     <td>{{ $roles[$item->role_id] }}</td>
                     <td>{{ $item->email }}</td>
