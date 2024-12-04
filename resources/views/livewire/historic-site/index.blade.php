@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\File;
 use App\Models\HistoricSite;
 use App\Models\Category;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\Validator;
 
 new class extends Component {
     use WithPagination, WithFileUploads;
@@ -29,6 +30,10 @@ new class extends Component {
 
     public Collection|array $categories = [];
     public Collection|array $all_categories = [];
+    public array $showeds = [
+        0 => 'Tidak',
+        1 => 'Ya'
+    ];
 
     public function mount(): void {
         $categories = Category::all();
@@ -49,11 +54,28 @@ new class extends Component {
     public function with(): array
     {
         return [
-            'items' => HistoricSite::query()
+            'items' => HistoricSite::with('category')
                 ->when($this->search, fn($query, $search) => $query->where('name', 'like', "%$search%"))
                 ->when($this->filter_category_id, fn($query, $filter_category_id) => $query->where('category_id', $filter_category_id))
                 ->paginate(10)
         ];
+    }
+
+    public function edit(int $id)
+    {
+        $this->id = $id;
+        $site = HistoricSite::find($id);
+
+        $this->name = $site->name;
+        $this->category_id = $site->category_id;
+        $this->description = $site->description;
+        $this->address = $site->address;
+        $this->phone = $site->phone ?? '';
+        $this->longitude = $site->longitude;
+        $this->latitude = $site->latitude;
+        $this->images = $site->images;
+
+        $this->dispatch('open-edit-modal');
     }
 
     public function saved(): void
@@ -67,6 +89,11 @@ new class extends Component {
             'latitude' => 'required',
             'files.*' => 'required|image|max:1024'
         ]);
+
+        if (!$this->files) {
+            $this->addError('files', 'The files field is required.');
+            return;
+        }
 
         $path = public_path('images/historic_sites');
 
@@ -97,7 +124,8 @@ new class extends Component {
                 'phone' => $this->phone,
                 'longitude' => $this->longitude,
                 'latitude' => $this->latitude,
-                'images' => json_encode($images)
+                'images' => json_encode($images),
+                'user_id' => auth()->id()
             ]
         );
 
@@ -108,17 +136,22 @@ new class extends Component {
             session()->flash('error', 'Error Saved');
         }
 
-        $this->redirect('/historic-sites', navigate: true);
-    }
-
-    public function update(int $id)
-    {
-
+        $this->redirect('/historic-site', navigate: true);
     }
 
     public function delete()
     {
+        $site = HistoricSite::find($this->id);
 
+        if ($site) {
+            $site->delete();
+            session()->flash('message', 'Deleted Successfully');
+        } else {
+            session()->flash('error', 'Error Deleted');
+        }
+
+        $this->id = 0;
+        $this->redirect('/historic-site', navigate: true);
     }
 
     public function filtered(): void
@@ -158,7 +191,7 @@ new class extends Component {
                 <th>Nama Situs</th>
                 <th>Kategori</th>
                 <th>Lokasi</th>
-                <th>Status</th>
+                <th>Publish</th>
                 <th class="w-40">#</th>
             </tr>
             </thead>
@@ -167,8 +200,8 @@ new class extends Component {
                 <tr>
                     <td>{{ $no++ }}</td>
                     <td>{{ $item->name }}</td>
-                    <td></td>
-                    <td></td>
+                    <td>{{ $item->category?->name ?? '-' }}</td>
+                    <td>{{ $item->address }}</td>
                     <td>
                         <x-select :data="$showeds" :value="$item->is_show" wire:change="setActive({{ $item->id }}, $event.target.value)" />
                     </td>
@@ -210,6 +243,23 @@ new class extends Component {
 
     @script
     <script>
+        $wire.on('open-edit-modal', () => {
+            const lng = $wire.get('longitude');
+            const lat = $wire.get('latitude');
+
+            if (lng && lat && mapBoxHistorySite) {
+                mapBoxHistorySite.flyTo({
+                    center: [lng, lat],
+                    essential: true
+                });
+            }
+
+            const content = $wire.get('description');
+            quill.root.innerHTML = content;
+
+            $wire.dispatch('open-modal', 'form');
+        });
+
         $wire.on('confirm-delete', (id) => {
             $wire.set('id', id);
             $wire.dispatch('open-modal', 'confirm-site-deleted');

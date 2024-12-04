@@ -4,7 +4,7 @@
         <!-- Modal header -->
         <div class="flex items-center justify-between p-4 md:p-5 border-b-2 rounded-t dark:border-gray-600">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                Form User
+                Form Situs
             </h3>
             <button type="button" x-on:click="$dispatch('close-site-modal')" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="add-modal">
                 <i class="bi bi-x-lg"></i>
@@ -36,19 +36,19 @@
             <div class="grid gap-4 mb-4 grid-cols-2">
                 <div class="col-span-2">
                     <x-input-label for="avatar" :value="__('Dokumentasi')" />
-                    <x-text-input wire:model="files" id="images" name="images" type="file" class="mt-1 block w-full border p-1" multiple />
-                    <x-input-error class="mt-2" :messages="$errors->get('images')" />
+                    <x-text-input wire:model="files" id="files" name="files" type="file" class="mt-1 block w-full border p-1" multiple />
+                    <x-input-error class="mt-2" :messages="$errors->get('files')" />
                 </div>
             </div>
             <div class="grid gap-4 mb-4 grid-cols-2" wire:ignore>
                 <div class="col-span-2">
                     <x-input-label for="name" :value="__('Maps')" />
-                    <x-secondary-button >
-                        <i class="bi bi-map"></i> Cari Lokasi
-                    </x-secondary-button>
-                    <x-input-error class="mt-2" :messages="$errors->get('longitude')" />
-                    <x-input-error class="mt-2" :messages="$errors->get('latitude')" />
+                    <x-maps />
                 </div>
+            </div>
+            <div>
+                <x-input-error class="mt-2" :messages="$errors->get('longitude')" />
+                <x-input-error class="mt-2" :messages="$errors->get('latitude')" />
             </div>
             <div class="grid gap-4 mb-4 grid-cols-2" wire:ignore>
                 <div class="col-span-2">

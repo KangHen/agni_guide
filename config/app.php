@@ -123,4 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'mapbox_access_token' => env('MAPBOX_ACCESS_TOKEN'),
+
 ];
