@@ -34,6 +34,11 @@
                 </div>
             </div>
             <div class="grid gap-4 mb-4 grid-cols-2">
+               <div class="flex">
+                   @foreach($images as $image)
+                        <img src="{{ asset('images/' . $image) }}" class="w-40" />
+                   @endforeach
+               </div>
                 <div class="col-span-2">
                     <x-input-label for="avatar" :value="__('Dokumentasi')" />
                     <x-text-input wire:model="files" id="files" name="files" type="file" class="mt-1 block w-full border p-1" multiple />

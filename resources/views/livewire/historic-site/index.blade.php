@@ -19,7 +19,7 @@ new class extends Component {
     public string $phone = '';
     public string $longitude = '';
     public string $latitude = '';
-    public string $images = '';
+    public array $images = [];
     public int $category_id = 0;
 
     public $files;
@@ -35,6 +35,11 @@ new class extends Component {
         1 => 'Ya'
     ];
 
+    /**
+     * Mount
+     *
+     * @return void
+     */
     public function mount(): void {
         $categories = Category::all();
 
@@ -51,6 +56,11 @@ new class extends Component {
         }
     }
 
+    /**
+     * With
+     *
+     * @return array
+     */
     public function with(): array
     {
         return [
@@ -61,7 +71,12 @@ new class extends Component {
         ];
     }
 
-    public function edit(int $id)
+    /**
+     * Edit
+     * @param int $id
+     * @return void
+     * ** */
+    public function edit(int $id): void
     {
         $this->id = $id;
         $site = HistoricSite::find($id);
@@ -73,11 +88,16 @@ new class extends Component {
         $this->phone = $site->phone ?? '';
         $this->longitude = $site->longitude;
         $this->latitude = $site->latitude;
-        $this->images = $site->images;
+        $this->images = json_decode($site->images);
 
         $this->dispatch('open-edit-modal');
     }
 
+    /**
+     * Store or Update
+     *
+     * @return void
+     */
     public function saved(): void
     {
         $this->validate([
@@ -90,7 +110,7 @@ new class extends Component {
             'files.*' => 'required|image|max:1024'
         ]);
 
-        if (!$this->files) {
+        if (!$this->files && !$this->id) {
             $this->addError('files', 'The files field is required.');
             return;
         }
@@ -102,13 +122,15 @@ new class extends Component {
         }
 
         $images = [];
-        foreach ($this->files as $image) {
-            $photoName = md5(time()) . rand(111,999);
-            $images[] = $image->storeAs('historic_sites', $photoName. '.' .$image->extension(), 'images_public_path');
+        if ($this->files) {
+            foreach ($this->files as $image) {
+                $photoName = md5(time()) . rand(111,999);
+                $images[] = $image->storeAs('historic_sites', $photoName. '.' .$image->extension(), 'images_public_path');
+            }
         }
 
         if ($this->id) {
-            $images = json_decode($this->images);
+            $images = $this->images;
             foreach ($images as $itemAdd) {
                 $images[] = $itemAdd;
             }
@@ -139,7 +161,12 @@ new class extends Component {
         $this->redirect('/historic-site', navigate: true);
     }
 
-    public function delete()
+    /**
+     * Delete
+     *
+     * @return void
+     */
+    public function delete(): void
     {
         $site = HistoricSite::find($this->id);
 
@@ -154,12 +181,44 @@ new class extends Component {
         $this->redirect('/historic-site', navigate: true);
     }
 
+    /**
+     * Set active or not
+     *
+     * @param int $id
+     * @param int $value
+     * @return void
+     */
+    public function setActive(int $id, int $value): void
+    {
+        $site = HistoricSite::find($id);
+        $site->is_show = $value;
+
+        if ($site->save()) {
+            session()->flash('message', 'Updated Successfully');
+        } else {
+            session()->flash('error', 'Error Updated');
+        }
+
+        $this->redirect('/historic-site', navigate: true);
+    }
+
+    /**
+     * Filtered
+     *
+     * @return void
+     */
     public function filtered(): void
     {
         $this->resetPage();
     }
 
-    protected function _reset()
+    /**
+     * Reset
+     *
+     * @return void
+     */
+    #[\Livewire\Attributes\On('reset-form')]
+    public function _reset(): void
     {
         $this->reset('id', 'name', 'category_id', 'description', 'address', 'phone', 'longitude', 'latitude', 'images');
     }
@@ -254,8 +313,7 @@ new class extends Component {
                 });
             }
 
-            const content = $wire.get('description');
-            quill.root.innerHTML = content;
+            quill.root.innerHTML = $wire.get('description');
 
             $wire.dispatch('open-modal', 'form');
         });
@@ -280,6 +338,7 @@ new class extends Component {
 
         $wire.on('close-site-modal', () => {
             quill.root.innerHTML = '';
+            $wire.dispatch('reset-form');
             $wire.dispatch('close-modal', 'form');
         });
     </script>

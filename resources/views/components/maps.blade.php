@@ -1,19 +1,21 @@
 <div class="w-full h-[200px]" id="mapbox-map"></div>
 
-@push('scripts')
+@script
     <script>
-        let mapBoxHistorySite = null;
+        window.mapBoxHistorySite = null;
 
-        const interval = setInterval(
-            () => {
-                if (mapboxgl) {
-                    clearInterval(interval);
-                    console.log('Mapbox loaded');
-                    initMapbox();
-                }
-            },
-            1000
-        )
+        if (!mapBoxHistorySite) {
+            const interval = setInterval(
+                () => {
+                    if (mapboxgl) {
+                        clearInterval(interval);
+                        console.log('Mapbox loaded');
+                        initMapbox();
+                    }
+                },
+                1000
+            );
+        }
 
         const initMapbox = () => {
             mapboxgl.accessToken = '{{ config('app.mapbox_access_token') }}';
@@ -87,4 +89,4 @@
             @this.set('latitude', lat);
         }
     </script>
-@endpush
+@endscript
