@@ -133,12 +133,16 @@ new class extends Component {
      * Filtered Setting
      * @return void
      */
-    public  function filtered()
+    public  function filtered(): void
     {
         $this->resetPage();
     }
 
-    private function _reset()
+    /**
+     * Reset Setting
+     * @return void
+     */
+    private function _reset(): void
     {
         $this->reset('id', 'name');
     }
@@ -160,7 +164,7 @@ new class extends Component {
         <table class="table mt-3">
             <thead>
             <tr>
-                <th>No.</th>
+                <th class="w-12">No.</th>
                 <th>Nama</th>
                 <th class="w-40">#</th>
             </tr>

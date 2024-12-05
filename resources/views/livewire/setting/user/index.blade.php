@@ -27,6 +27,9 @@ new class extends Component {
     public int $filter_role_id = 0;
     public array $status = [0 => 'Inactive', 1 => 'Active'];
 
+    /**
+     * @return array
+     */
     public function with(): array
     {
         return [
@@ -37,7 +40,11 @@ new class extends Component {
         ];
     }
 
-    public function mount()
+    /**
+     * Mount Setting
+     * @return void
+     */
+    public function mount(): void
     {
         $this->roles = [
             -1 => 'Developer',
@@ -146,7 +153,6 @@ new class extends Component {
 
     /**
      * Update User
-     * @param int $id
      * @return void
      */
     public function update(): void
@@ -209,7 +215,7 @@ new class extends Component {
      * @param int $value
      * @return void
      */
-    public  function  setActive($id, $value)
+    public  function  setActive(int $id, int $value): void
     {
         $user = User::find($id);
         $user->is_active = $value;
@@ -220,14 +226,14 @@ new class extends Component {
             session()->flash('error', 'Error Updated');
         }
 
-        return $this->redirect('/user', navigate: true);
+        $this->redirect('/user', navigate: true);
     }
 
     /**
      * Delete User
      * @return void
      */
-    public function delete()
+    public function delete(): void
     {
         $deleted = User::find($this->id)->delete();
         $this->id = 0;
@@ -238,14 +244,22 @@ new class extends Component {
             session()->flash('error', 'Error Deleted');
         }
 
-        return $this->redirect('/user', navigate: true);
+        $this->redirect('/user', navigate: true);
     }
 
-    public  function filtered()
+    /**
+     * Filtered
+     * @return void
+     */
+    public  function filtered(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reset
+     * @return void
+     */
     protected function _reset(): void
     {
         $this->reset('id', 'name', 'email', 'password', 'role_id', 'phone', 'address', 'city');
@@ -275,7 +289,7 @@ new class extends Component {
             <!-- head -->
             <thead>
             <tr>
-                <th>No</th>
+                <th class="w-12">No</th>
                 <th>Nama</th>
                 <th>Role</th>
                 <th>Email</th>
