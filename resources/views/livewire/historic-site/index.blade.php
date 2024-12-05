@@ -16,7 +16,6 @@ new class extends Component {
     public string $name = '';
     public string $description = '';
     public string $address = '';
-    public string $phone = '';
     public string $longitude = '';
     public string $latitude = '';
     public array $images = [];
@@ -85,7 +84,6 @@ new class extends Component {
         $this->category_id = $site->category_id;
         $this->description = $site->description;
         $this->address = $site->address;
-        $this->phone = $site->phone ?? '';
         $this->longitude = $site->longitude;
         $this->latitude = $site->latitude;
         $this->images = json_decode($site->images);
