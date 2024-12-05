@@ -12,6 +12,7 @@ Route::middleware(['auth', 'verified'])
         Route::view('user', 'user')->name('setting.user');
         Route::view('category', 'category')->name('setting.category');
         Route::view('page', 'page')->name('page');
+        Route::view('post', 'post')->name('post');
         Route::view('historic-site', 'historic-site')->name('historic-site');
     });
 
