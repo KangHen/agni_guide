@@ -14,6 +14,7 @@ Route::middleware(['auth', 'verified'])
         Route::view('page', 'page')->name('page');
         Route::view('post', 'post')->name('post');
         Route::view('historic-site', 'historic-site')->name('historic-site');
+        Route::view('sale', 'sale')->name('sale');
     });
 
 require __DIR__.'/auth.php';

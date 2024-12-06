@@ -4,9 +4,9 @@
         <!-- Modal header -->
         <div class="flex items-center justify-between p-4 md:p-5 border-b-2 rounded-t dark:border-gray-600">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                Form Post
+                Form Halaman
             </h3>
-            <button type="button" x-on:click="$dispatch('close-post-modal')" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="add-modal">
+            <button type="button" x-on:click="$dispatch('close-page-modal')" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="add-modal">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
@@ -39,7 +39,7 @@
                 </div>
             </div>
             <div class="flex items-center justify-end gap-4 mt-20">
-                <x-secondary-button x-on:click="$dispatch('close-post-modal')">
+                <x-secondary-button x-on:click="$dispatch('close-page-modal')">
                     {{ __('Cancel') }}
                 </x-secondary-button>
                 <x-primary-button x-on:mouseover="$dispatch('get-content')" wire:click.prevent="saved()">{{ __('Save') }}</x-primary-button>

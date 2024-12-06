@@ -1,1 +1,1 @@
-<img class="w-12" src="{{ asset('agni_1024.png') }}" alt="" srcset="">
+<img {{ $attributes->merge(['class' => 'h-auto']) }} src="{{ asset('agni_1024.png') }}" alt="Logo" />

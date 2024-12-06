@@ -18,7 +18,7 @@ $logout = function (Logout $logout) {
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" wire:navigate>
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        <x-application-logo class="w-20" />
                     </a>
                 </div>
 
@@ -54,7 +54,7 @@ $logout = function (Logout $logout) {
                     <x-nav-link :href="route('historic-site')" :active="request()->routeIs('historic-site')" wire:navigate>
                         {{ __('Situs') }}
                     </x-nav-link>
-                    <div class="hidden sm:flex sm:items-center sm:ms-6 {{ request()->routeIs('post') ? 'border-b-2 border-orange-400' : '' }}">
+                    <div class="hidden sm:flex sm:items-center sm:ms-6 {{ request()->routeIs('post') || request()->routeIs('page') ? 'border-b-2 border-orange-400' : '' }}">
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
                                 <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
@@ -69,7 +69,7 @@ $logout = function (Logout $logout) {
                             </x-slot>
 
                             <x-slot name="content">
-                                <x-dropdown-link :href="route('setting.user')" wire:navigate>
+                                <x-dropdown-link :href="route('page')" wire:navigate>
                                     {{ __('Page') }}
                                 </x-dropdown-link>
                                 <x-dropdown-link :href="route('post')" wire:navigate>
@@ -79,7 +79,7 @@ $logout = function (Logout $logout) {
                         </x-dropdown>
                     </div>
 
-                    <x-nav-link :href="route('dashboard')" wire:navigate>
+                    <x-nav-link :href="route('sale')" :active="request()->routeIs('sale')" wire:navigate>
                         {{ __('Sales') }}
                     </x-nav-link>
                 </div>
