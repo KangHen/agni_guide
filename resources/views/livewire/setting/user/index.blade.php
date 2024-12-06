@@ -302,7 +302,7 @@ new class extends Component {
                 <tr>
                     <td>{{ $no++ }}</td>
                     <td>{{ $item->name }}</td>
-                    <td>{{ $roles[$item->role_id] }}</td>
+                    <td>{{ $roles[$item->role_id->value] }}</td>
                     <td>{{ $item->email }}</td>
                     <td>
                         <x-select :data="$status" :value="$item->is_active" wire:change="setActive({{ $item->id }}, $event.target.value)" />
