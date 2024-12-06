@@ -17,6 +17,8 @@
         "vite": "^5.0"
     },
     "dependencies": {
+        "animate.css": "^4.1.1",
+        "animejs": "^3.2.2",
         "chart.js": "^4.4.7",
         "mapbox-gl": "^3.8.0",
         "quill": "^2.0.3"
