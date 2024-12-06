@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API\Register;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\RegisterResource;
+use App\Jobs\SendMailJob;
+use App\Mail\RegisterVerifyMail;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
@@ -27,6 +29,9 @@ class RegisterController extends Controller
         $user = User::query()->create($data);
         $sanctumToken = config('app.sanctum_token');
         $token = $user->createToken($sanctumToken, ['*'], now()->addMonths(6))->plainTextToken;
+
+        $verifyToken = $user->createToken('email-verification')->plainTextToken;
+        SendMailJob::dispatch($user->email, new RegisterVerifyMail($user, $verifyToken))->onQueue('mail');
 
         return (new RegisterResource($user))->additional([
             'success' => (bool) $user,
