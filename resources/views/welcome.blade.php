@@ -28,7 +28,7 @@
         <!-- Styles -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body>
+    <body class="w-full px-3">
     <!-- Gradient black -->
     <div style="background-image: url('{{ asset('hero/bg.jpg') }}');background-size: cover" class="fixed inset-0 bg-gradient-to-b from-white via-transparent to-gray-50 pointer-events-none z-[-3] grayscale blur"></div>
     <div class="fixed inset-0 bg-gradient-to-b from-transparent via-black to-transparent  pointer-events-none z-[-2]"></div>
@@ -61,12 +61,17 @@
         </nav>
     </header>
     <section>
-        <div class="grid max-w-screen-xl px-4 pt-20 pb-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 lg:pt-28">
+        <div class="grid sm:w-full lg:max-w-screen-xl px-4 pt-20 pb-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 lg:pt-28">
             <div class="mr-auto place-self-center lg:col-span-7">
                 <h1
                     class="head-title mb-8 text-6xl font-extrabold bg-gradient-to-r from-red-500 to-orange-400 bg-clip-text text-transparent">
                     Jelajah Situs <br>Kota Tuban.</h1>
-                <p class="animate__animated animate__fadeIn head-text max-w-2xl mb-6 font-light text-white lg:mb-8 md:text-lg lg:text-xl">
+
+                <div class="lg:hidden md:hidden w-full sm:py-2.5">
+                    <img src="{{ asset('hero/hero.webp') }}" class="rounded-full shadow-lg mb-3" alt="hero image">
+                </div>
+
+                <p class="head-text max-w-2xl mb-6 font-light text-white lg:mb-8 md:text-sm lg:text-sm">
                     Eksplorasi Situs Bersejarah di Kabupaten Tuban dengan <span class="font-extrabold bg-gradient-to-r from-red-500 to-orange-400 bg-clip-text text-transparent">Agni Guide App</span>. Aplikasi inovatif yang membantu Anda menjelajahi dan menemukan kekayaan budaya, sejarah, serta destinasi menarik di Kabupaten Tuban.
                     Dengan fitur interaktif dan informasi lengkap, perjalanan Anda menjadi lebih bermakna dan seru.
                 </p>

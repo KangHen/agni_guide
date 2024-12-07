@@ -11,13 +11,26 @@ window.mapboxgl = mapboxgl;
 window.Chart = Chart;
 window.anime = anime;
 
+
 const createAnimation = () => {
-    console.log('Creating animation');
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+
+        return;
+    }
+
     anime({
         targets: '.head-title',
-        translateX: 350,
+        translateX: 250,
         scale: 1.5,
-        rotate: '1turn',
+        delay: 1000,
+        duration:2000
+    });
+
+    anime({
+        targets: '.head-text',
+        translateX: 35,
+        scale: 1.1,
         delay: 1000,
         duration:2000
     });
