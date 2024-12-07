@@ -2,9 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Register\RegisterVerifyController;
+use App\Http\Controllers\TestController;
 
 Route::view('/', 'welcome');
 Route::get('register-verify', RegisterVerifyController::class)->name('register.verify');
+Route::get('test', [TestController::class, 'index']);
 
 Route::middleware(['auth', 'verified'])
     ->group(function () {
