@@ -68,7 +68,7 @@ class PostController extends Controller
 
         $perPage = $request->limit ?? 10;
 
-        $posts = Post::query()
+        $posts = Post::publish()
                 ->when($request->has('search'), function ($query) use ($request) {
                     $query->where('title', 'like', "%{$request->search}%");
                 })

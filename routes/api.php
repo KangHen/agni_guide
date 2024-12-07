@@ -9,6 +9,7 @@ use App\Http\Controllers\API\Auth\GoogleSignInController;
 use App\Http\Controllers\API\Auth\UpdateTokenController;
 use App\Http\Controllers\API\PageController;
 use App\Http\Controllers\API\PostController;
+use App\Http\Controllers\API\SaleController;
 
 /** Default Route */
 Route::get('/', function () {
@@ -22,11 +23,16 @@ Route::post('google-sign', GoogleSignInController::class)->name('api.google-sign
 /** Auth Route */
 Route::post('auth', LoginController::class)->name('api.auth');
 
-/** User Routes */
+/**
+ * Authenticated Route
+ */
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('user', fn (Request $request) => $request->user())->name('api.user');
     Route::post('update-token', UpdateTokenController::class)->name('api.update-token');
     Route::get('categories', [CategoryController::class, 'index'])->name('api.categories');
     Route::get('page', [PageController::class, 'index'])->name('api.page');
-    Route::get('posts/{slug}', [PostController::class, 'show'])->name('api.post.show');
+    Route::get('posts', [PostController::class, 'index'])->name('api.posts');
+    Route::get('posts/{slug}', [PostController::class, 'show'])->name('api.posts.show');
+    Route::get('sales', [SaleController::class, 'index'])->name('api.sales');
+    Route::get('sales/{slug}', [SaleController::class, 'show'])->name('api.sales.show');
 });
