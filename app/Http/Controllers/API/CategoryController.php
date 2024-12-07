@@ -9,7 +9,6 @@ use OpenApi\Annotations as OA;
 
 class CategoryController extends Controller
 {
-
     /**
      * @OA\Get(
      *     path="/api/categories",
