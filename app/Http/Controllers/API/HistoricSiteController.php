@@ -11,7 +11,7 @@ use OpenApi\Annotations as OA;
 
 class HistoricSiteController extends Controller
 {
-    private $limit = 50;
+    private int $limit = 50;
 
     /**
      * Get historic sites.
@@ -54,7 +54,7 @@ class HistoricSiteController extends Controller
         $longitude  = $request->longitude ?? config('app.default_longitude');
         $latitude   = $request->latitude ?? config('app.default_latitude');
 
-        $sql = "SELECT *, ( 6371 * acos( cos( radians($latitude) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians($longitude) ) + sin( radians($latitude) ) * sin( radians( latitude ) ) ) ) AS distance ";
+        $sql = "*, ( 6371 * acos( cos( radians($latitude) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians($longitude) ) + sin( radians($latitude) ) * sin( radians( latitude ) ) ) ) AS distance ";
         $historicSites = HistoricSite::with([
                 'category' => fn ($q) => $q->select('name', 'historic_site_id')
             ])
@@ -82,10 +82,9 @@ class HistoricSiteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id): JsonResource
+    public function show(int $id): JsonResource
     {
         $historicSite = HistoricSite::with('category', 'user')
-            ->publish()
             ->where('id', $id)
             ->first();
 

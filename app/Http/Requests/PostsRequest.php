@@ -11,7 +11,7 @@ class PostsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,7 @@ class PostsRequest extends FormRequest
         return [
             'search' => 'nullable|string',
             'limit' => 'nullable|integer',
-            'page' => 'integer',
+            'page' => 'integer|required',
         ];
     }
 }

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PostsRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Annotations as OA;
 
@@ -62,10 +64,8 @@ class PostController extends Controller
      *     )
      * )
      */
-    public function index(PostsRequest $request): JsonResource
+    public function index(PostsRequest $request): JsonResource|JsonResponse
     {
-        $request->validated();
-
         $perPage = $request->limit ?? 10;
 
         $posts = Post::publish()
@@ -107,11 +107,18 @@ class PostController extends Controller
      *     )
      * )
      */
-    public function show(string $slug): JsonResource
+    public function show(string $slug): JsonResource|JsonResponse
     {
         $post = Post::query()
                 ->where('slug', $slug)
                 ->first();
+
+        if (!$post) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Post tidak ditemukan'
+            ], 200);
+        }
 
         $post->read_count += 1;
         $post->save();

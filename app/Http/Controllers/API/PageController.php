@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PageResource;
 use App\Models\Page;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Annotations as OA;
@@ -16,41 +17,56 @@ class PageController extends Controller
      * Get page by slug.
      *
      * @OA\Get(
-     *     path="/api/page",
+     *     path="/api/page/{slug}",
      *     summary="Get page by slug",
-     *     tags={"Page"},
+     *     tags={"Pages"},
      *     @OA\Parameter(
-     *         description="Page slug",
-     *         in="query",
+     *         in="path",
      *         name="slug",
+     *         description="Slug of the page",
      *         required=true,
-     *         example="kebijakan-privasi",
      *         @OA\Schema(
      *             type="string"
      *         )
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Page successfully retrieved",
-     *         @OA\JsonContent(ref="#/components/schemas/PageResource")
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Page not found"
+     *         description="Page berhasil diambil",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="success",
+     *                 type="boolean",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Page berhasil diambil"
+     *             ),
+     *             @OA\Property(
+     *                 property="data",
+     *                 ref="#/components/schemas/PageResource"
+     *             )
+     *         )
      *     )
      * )
-     * @param Request $request
+     *
+     * @param string $slug
      * @return JsonResource
      */
-    public function index(Request $request): JsonResource
+    public function index(string $slug): JsonResource|JsonResponse
     {
-        $request->validate([
-            'slug' => 'required|string'
-        ]);
-
         $page = Page::query()
-                ->where('slug', $request->slug)
+                ->where('slug', $slug)
                 ->first();
+
+        if (!$page) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Page tidak ditemukan'
+            ], 200);
+        }
 
         return (new PageResource($page))->additional([
             'success' => true,

@@ -31,7 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('user', fn (Request $request) => $request->user())->name('api.user');
     Route::post('update-token', UpdateTokenController::class)->name('api.update-token');
     Route::get('categories', [CategoryController::class, 'index'])->name('api.categories');
-    Route::get('page', [PageController::class, 'index'])->name('api.page');
+    Route::get('page/{slug}', [PageController::class, 'index'])->name('api.page');
     Route::get('posts', [PostController::class, 'index'])->name('api.posts');
     Route::get('posts/{slug}', [PostController::class, 'show'])->name('api.posts.show');
     Route::get('sales', [SaleController::class, 'index'])->name('api.sales');

@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\Register\RegisterVerifyController;
 
 Route::view('/', 'welcome');
+Route::get('register-verify', RegisterVerifyController::class)->name('register.verify');
 
 Route::middleware(['auth', 'verified'])
     ->group(function () {
