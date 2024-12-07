@@ -3,24 +3,72 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\HistoricSiteResource;
+use App\Models\HistoricSite;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+use OpenApi\Annotations as OA;
 
 class HistoricSiteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
+    private $limit = 50;
 
     /**
-     * Show the form for creating a new resource.
+     * Get historic sites.
+     *
+     * @OA\Get(
+     *     path="/api/historic-sites",
+     *     summary="Get historic sites",
+     *     tags={"Historic Sites"},
+     *     @OA\Parameter(
+     *         description="Category ID",
+     *         in="query",
+     *         name="category",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         description="Search query",
+     *         in="query",
+     *         name="search",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Historic sites successfully retrieved",
+     *         @OA\JsonContent(ref="#/components/schemas/HistoricSiteResource")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Historic sites not found"
+     *     )
+     * )
      */
-    public function create()
+    public function index(Request $request): JsonResource
     {
-        //
+        $longitude  = $request->longitude ?? config('app.default_longitude');
+        $latitude   = $request->latitude ?? config('app.default_latitude');
+
+        $sql = "SELECT *, ( 6371 * acos( cos( radians($latitude) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians($longitude) ) + sin( radians($latitude) ) * sin( radians( latitude ) ) ) ) AS distance ";
+        $historicSites = HistoricSite::with([
+                'category' => fn ($q) => $q->select('name', 'historic_site_id')
+            ])
+            ->publish()
+            ->selectRaw($sql)
+            ->when($request->has('category'), fn ($q) => $q->where('category_id', $request->category))
+            ->when($request->has('search'), fn ($q) => $q->where('name', 'like', "%{$request->search}%"))
+            ->having('distance', '<', 25)
+            ->paginate($this->limit);
+
+        return HistoricSiteResource::collection($historicSites)->additional([
+            'success' => true,
+            'message' => 'Situs berhasil diambil',
+        ]);
     }
 
     /**
@@ -34,17 +82,17 @@ class HistoricSiteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): JsonResource
     {
-        //
-    }
+        $historicSite = HistoricSite::with('category', 'user')
+            ->publish()
+            ->where('id', $id)
+            ->first();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return (new HistoricSiteResource($historicSite))->additional([
+            'success' => true,
+            'message' => 'Situs berhasil diambil',
+        ]);
     }
 
     /**

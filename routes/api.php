@@ -10,6 +10,7 @@ use App\Http\Controllers\API\Auth\UpdateTokenController;
 use App\Http\Controllers\API\PageController;
 use App\Http\Controllers\API\PostController;
 use App\Http\Controllers\API\SaleController;
+use App\Http\Controllers\API\HistoricSiteController;
 
 /** Default Route */
 Route::get('/', function () {
@@ -35,4 +36,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('posts/{slug}', [PostController::class, 'show'])->name('api.posts.show');
     Route::get('sales', [SaleController::class, 'index'])->name('api.sales');
     Route::get('sales/{slug}', [SaleController::class, 'show'])->name('api.sales.show');
+    Route::apiResource('historic-sites', HistoricSiteController::class)->only(['index', 'show']);
 });
