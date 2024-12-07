@@ -29,7 +29,8 @@ class RegisterController extends Controller
             'is_active' => 0
         ];
 
-        $user = User::query()->create($data);
+        $create = User::query()->create($data);
+        $user   = User::find($create->id);
         $sanctumToken = config('app.sanctum_token');
         $token = $user->createToken($sanctumToken, ['*'], now()->addMonth(1))->plainTextToken;
 

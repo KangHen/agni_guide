@@ -31,7 +31,7 @@ class GoogleService
 
     public function registerUser(): User
     {
-        $this->user = User::query()
+        $save = User::query()
             ->create([
                 'name' => $this->name,
                 'email' => $this->email,
@@ -44,6 +44,10 @@ class GoogleService
                 'is_active' => 1,
                 'is_google_login' => 1
             ]);
+
+        if ($save) {
+            $this->user = User::find($save->id);
+        }
 
         return $this->user;
     }

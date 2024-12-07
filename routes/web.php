@@ -6,7 +6,7 @@ use App\Http\Controllers\TestController;
 
 Route::view('/', 'welcome');
 Route::get('register-verify', RegisterVerifyController::class)->name('register.verify');
-Route::get('test', [TestController::class, 'index']);
+//Route::get('test', [TestController::class, 'index']);
 
 Route::middleware(['auth', 'verified'])
     ->group(function () {
