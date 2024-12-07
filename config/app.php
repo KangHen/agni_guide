@@ -125,4 +125,5 @@ return [
 
     'mapbox_access_token' => env('MAPBOX_ACCESS_TOKEN'),
     'sanctum_token' => env('SANCTUM_TOKEN', 'pUCEgEihsvSRyNKvXjNvFkKgGafMPHoPJcenKmwfGuRSGmifeN'),
+    'defuse_encryption_key' => env('DEFUSE_ENCRYPTION_KEY', 'def00000f3b1e7')
 ];

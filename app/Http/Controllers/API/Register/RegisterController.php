@@ -7,8 +7,11 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\RegisterResource;
 use App\Jobs\SendMailJob;
 use App\Mail\RegisterVerifyMail;
+use App\Models\EmailVerification;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Defuse\Crypto\Crypto;
+use Defuse\Crypto\Key;
 
 class RegisterController extends Controller
 {
@@ -28,14 +31,31 @@ class RegisterController extends Controller
 
         $user = User::query()->create($data);
         $sanctumToken = config('app.sanctum_token');
-        $token = $user->createToken($sanctumToken, ['*'], now()->addMonths(6))->plainTextToken;
+        $token = $user->createToken($sanctumToken, ['*'], now()->addMonth(1))->plainTextToken;
 
-        $verifyToken = $user->createToken('email-verification')->plainTextToken;
-        SendMailJob::dispatch($user->email, new RegisterVerifyMail($user, $verifyToken))->onQueue('mail');
+        $tokenInformation = collect([
+            'email' => $user->email,
+            'name' => $user->name,
+            'phone' => $user->phone,
+            'address' => $user->address,
+            'city' => $user->city,
+            'created_at' => $user->created_at,
+        ])->toJson();
+
+        $encryptionKey = config('app.defuse_encryption_key');
+        $verifyToken = Crypto::encrypt($tokenInformation, Key::loadFromAsciiSafeString($encryptionKey));
+
+        EmailVerification::query()->create([
+            'email' => $user->email,
+            'token' => $verifyToken,
+            'expired_at' => now()->addMonth()
+        ]);
+
+        SendMailJob::dispatch($user->email, new RegisterVerifyMail($user, $verifyToken))->onQueue('email');
 
         return (new RegisterResource($user))->additional([
             'success' => (bool) $user,
-            'message' => 'User registered successfully',
+            'message' => 'Berhasil mendaftar, silahkan cek email Anda untuk verifikasi',
             'token' => $token,
         ]);
     }

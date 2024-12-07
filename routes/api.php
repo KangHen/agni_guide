@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\Register\RegisterController;
+use App\Http\Controllers\API\Auth\GoogleSignInController;
 
 /** Default Route */
 Route::get('/', function () {
@@ -13,6 +14,7 @@ Route::get('/', function () {
 
 /** Register Routes */
 Route::post('register', RegisterController::class)->name('api.register');
+Route::post('google-sign', GoogleSignInController::class)->name('api.google-sign');
 
 /** Auth Route */
 Route::post('auth', LoginController::class)->name('api.auth');
