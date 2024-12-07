@@ -7,6 +7,8 @@ use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\Register\RegisterController;
 use App\Http\Controllers\API\Auth\GoogleSignInController;
 use App\Http\Controllers\API\Auth\UpdateTokenController;
+use App\Http\Controllers\API\PageController;
+use App\Http\Controllers\API\PostController;
 
 /** Default Route */
 Route::get('/', function () {
@@ -25,4 +27,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('user', fn (Request $request) => $request->user())->name('api.user');
     Route::post('update-token', UpdateTokenController::class)->name('api.update-token');
     Route::get('categories', [CategoryController::class, 'index'])->name('api.categories');
+    Route::get('page', [PageController::class, 'index'])->name('api.page');
+    Route::get('posts/{slug}', [PostController::class, 'show'])->name('api.post.show');
 });
