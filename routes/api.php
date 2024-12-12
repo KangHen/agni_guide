@@ -16,6 +16,7 @@ use App\Http\Controllers\API\HistoricSiteController;
 Route::get('/', function () {
     return response()->json(['message' => 'Agni Guide API v1.0']);
 });
+Route::get('terms', [PageController::class, 'terms'])->name('api.page');
 
 /** Register Routes */
 Route::post('register', RegisterController::class)->name('api.register');

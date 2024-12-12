@@ -73,4 +73,9 @@ class PageController extends Controller
             'message' => 'Page berhasil diambil'
         ]);
     }
+
+    public function terms(): JsonResource|JsonResponse
+    {
+        return $this->index('privacy-policy');
+    }
 }

@@ -44,11 +44,12 @@ class LoginController extends Controller
 
         $user = User::query()
                 ->where('email', $request->email)
+                ->where('is_active', 1)
                 ->first();
 
         if (! $user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'message' => 'Email or Password was Incorrect'
+                'message' => 'Email atau Password was Salah'
             ]);
         }
 

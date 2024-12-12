@@ -30,4 +30,20 @@ class RegisterRequest extends FormRequest
             'city' => 'required|string',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Nama harus diisi.',
+            'email.required' => 'Email harus diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email sudah terdaftar.',
+            'password.required' => 'Password wajib isi',
+            'password.min' => 'Password minimal 8 karakter',
+            'phone.required' => 'Nomor telepon harus diisi.',
+            'phone.unique' => 'Nomor telepon sudah terdaftar.',
+            'address.required' => 'Alamat harus diisi.',
+            'city.required' => 'Kota harus diisi.',
+        ];
+    }
 }

@@ -23,6 +23,7 @@ new class extends Component {
     public string|null $search = '';
 
     public $file;
+    public array $status = [0 => 'Tidak', 1 => 'Publish'];
 
     public  function mount(): void
     {
@@ -68,7 +69,6 @@ new class extends Component {
                 'content' => $this->content,
                 'image' => $this->image,
                 'slug' => str($this->title)->slug(),
-                'is_published' => 0,
                 'user_id' => auth()->id()
             ]
         );
@@ -104,6 +104,26 @@ new class extends Component {
             session()->flash('message', 'Deleted Successfully');
         } else {
             session()->flash('message', 'Failed to delete');
+        }
+
+        $this->redirect('/post', navigate: true);
+    }
+
+    /**
+     * Set Active
+     * @param int $id
+     * @param int $value
+     * @return void
+     */
+    public function setActive(int $id, int $value): void
+    {
+        $page = Post::find($id);
+        $page->is_published = $value;
+
+        if ($page->save()) {
+            session()->flash('message', 'Updated Successfully');
+        } else {
+            session()->flash('error', 'Error Updated');
         }
 
         $this->redirect('/post', navigate: true);
@@ -159,7 +179,9 @@ new class extends Component {
                     </td>
                     <td>{{ $item->title }}</td>
                     <td>{{ substr(strip_tags($item->content), 0, 100) }}</td>
-                    <td>{{ $item->is_published }}</td>
+                    <td>
+                        <x-select :data="$status" :value="$item->is_published" wire:change="setActive({{ $item->id }}, $event.target.value)" />
+                    </td>
                     <td>
                         <x-edit-button wire:click="edit({{ $item->id }})" />
                         <x-delete-button x-on:click.prevent="$dispatch('confirm-delete', {{ $item->id }})" />
