@@ -11,7 +11,7 @@ use OpenApi\Annotations as OA;
 
 class HistoricSiteController extends Controller
 {
-    private int $limit = 50;
+    private int $limit = 100;
 
     /**
      * Get historic sites.
@@ -54,13 +54,13 @@ class HistoricSiteController extends Controller
         $longitude  = $request->longitude ?? config('app.default_longitude');
         $latitude   = $request->latitude ?? config('app.default_latitude');
 
-        $sql = "*, ( 6371 * acos( cos( radians($latitude) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians($longitude) ) + sin( radians($latitude) ) * sin( radians( latitude ) ) ) ) AS distance ";
+        $sql = "id, name, category_id, latitude, longitude, ( 6371 * acos( cos( radians($latitude) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians($longitude) ) + sin( radians($latitude) ) * sin( radians( latitude ) ) ) ) AS distance ";
         $historicSites = HistoricSite::with([
-                'category' => fn ($q) => $q->select('name', 'historic_site_id')
+                'category' => fn ($q) => $q->select('id', 'name')
             ])
             ->publish()
             ->selectRaw($sql)
-            ->when($request->has('category'), fn ($q) => $q->where('category_id', $request->category))
+            ->when($request->has('categories'), fn ($q) => $q->whereIn('category_id', explode(',',$request->categories)))
             ->when($request->has('search'), fn ($q) => $q->where('name', 'like', "%{$request->search}%"))
             ->having('distance', '<', 25)
             ->paginate($this->limit);
@@ -68,6 +68,7 @@ class HistoricSiteController extends Controller
         return HistoricSiteResource::collection($historicSites)->additional([
             'success' => true,
             'message' => 'Situs berhasil diambil',
+            'categories' => $request->categories
         ]);
     }
 

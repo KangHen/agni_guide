@@ -141,7 +141,6 @@ new class extends Component {
                 'category_id' => $this->category_id,
                 'description' => $this->description,
                 'address' => $this->address,
-                'phone' => $this->phone,
                 'longitude' => $this->longitude,
                 'latitude' => $this->latitude,
                 'images' => json_encode($images),
@@ -218,7 +217,7 @@ new class extends Component {
     #[\Livewire\Attributes\On('reset-form')]
     public function _reset(): void
     {
-        $this->reset('id', 'name', 'category_id', 'description', 'address', 'phone', 'longitude', 'latitude', 'images');
+        $this->reset('id', 'name', 'category_id', 'description', 'address', 'longitude', 'latitude', 'images');
     }
 }; ?>
 
