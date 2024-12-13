@@ -109,7 +109,7 @@ class PostController extends Controller
      */
     public function show(string $slug): JsonResource|JsonResponse
     {
-        $post = Post::query()
+        $post = Post::with('user')
                 ->where('slug', $slug)
                 ->first();
 

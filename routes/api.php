@@ -29,13 +29,17 @@ Route::post('auth', LoginController::class)->name('api.auth');
  * Authenticated Route
  */
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('user', fn (Request $request) => $request->user())->name('api.user');
+    Route::prefix('user')->group(function () {
+        Route::get('/', fn (Request $request) => $request->user())->name('api.user');
+        Route::put('profile', fn (Request $request) => $request->user())->name('api.user.update');
+        Route::put('password', fn (Request $request) => $request->user())->name('api.user.password');
+    });
     Route::post('update-token', UpdateTokenController::class)->name('api.update-token');
     Route::get('categories', [CategoryController::class, 'index'])->name('api.categories');
     Route::get('page/{slug}', [PageController::class, 'index'])->name('api.page');
     Route::get('posts', [PostController::class, 'index'])->name('api.posts');
     Route::get('posts/{slug}', [PostController::class, 'show'])->name('api.posts.show');
     Route::get('sales', [SaleController::class, 'index'])->name('api.sales');
-    Route::get('sales/{slug}', [SaleController::class, 'show'])->name('api.sales.show');
+    Route::get('sales/{id}', [SaleController::class, 'show'])->name('api.sales.show');
     Route::apiResource('historic-sites', HistoricSiteController::class)->only(['index', 'show']);
 });

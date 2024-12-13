@@ -69,7 +69,7 @@ class SaleController extends Controller
 
         $paginate = $request->limit ?? 10;
         $sales = Product::query()
-                ->where($request->has('search'), function ($query) use ($request) {
+                ->when($request->has('search'), function ($query) use ($request) {
                     $query->where('name', 'like', "%{$request->search}%");
                 })->paginate($paginate);
 
@@ -83,16 +83,16 @@ class SaleController extends Controller
      * Get a sale by slug.
      *
      * @OA\Get(
-     *     path="/api/sales/{slug}",
-     *     summary="Get a sale by slug",
+     *     path="/api/sales/{id}",
+     *     summary="Get a sale by id",
      *     tags={"Sales"},
      *     @OA\Parameter(
      *         in="path",
-     *         name="slug",
-     *         description="Sale slug",
+     *         name="id",
+     *         description="Sale Id",
      *         required=true,
      *         @OA\Schema(
-     *             type="string"
+     *             type="integer"
      *         )
      *     ),
      *     @OA\Response(
@@ -121,10 +121,10 @@ class SaleController extends Controller
      *     )
      * )
      */
-    public function show(string $slug): JsonResource
+    public function show(int $id): JsonResource
     {
         $sale = Product::query()
-                ->where('slug', $slug)
+                ->where('id', $id)
                 ->first();
 
         return (new SaleResource($sale))->additional([
