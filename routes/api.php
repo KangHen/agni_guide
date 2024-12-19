@@ -11,6 +11,8 @@ use App\Http\Controllers\API\PageController;
 use App\Http\Controllers\API\PostController;
 use App\Http\Controllers\API\SaleController;
 use App\Http\Controllers\API\HistoricSiteController;
+use App\Http\Controllers\API\Auth\UpdateProfileController;
+use App\Http\Controllers\API\Auth\UpdatePasswordController;
 
 /** Default Route */
 Route::get('/', function () {
@@ -31,8 +33,8 @@ Route::post('auth', LoginController::class)->name('api.auth');
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('user')->group(function () {
         Route::get('/', fn (Request $request) => $request->user())->name('api.user');
-        Route::put('profile', fn (Request $request) => $request->user())->name('api.user.update');
-        Route::put('password', fn (Request $request) => $request->user())->name('api.user.password');
+        Route::put('profile', UpdateProfileController::class)->name('api.user.update');
+        Route::put('password', UpdatePasswordController::class)->name('api.user.password');
     });
     Route::post('update-token', UpdateTokenController::class)->name('api.update-token');
     Route::get('categories', [CategoryController::class, 'index'])->name('api.categories');
