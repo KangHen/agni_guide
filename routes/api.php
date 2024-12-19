@@ -41,5 +41,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('posts/{slug}', [PostController::class, 'show'])->name('api.posts.show');
     Route::get('sales', [SaleController::class, 'index'])->name('api.sales');
     Route::get('sales/{id}', [SaleController::class, 'show'])->name('api.sales.show');
+    Route::get('historic-sites/showcase', [HistoricSiteController::class, 'showcase'])->name('api.historic-sites.showcase');
     Route::apiResource('historic-sites', HistoricSiteController::class)->only(['index', 'show']);
 });

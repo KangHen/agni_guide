@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\File;
 use App\Models\HistoricSite;
 use App\Models\Category;
 use Illuminate\Support\Collection;
-use Illuminate\Validation\Validator;
+use Intervention\Image\Laravel\Facades\Image;
 
 new class extends Component {
     use WithPagination, WithFileUploads;
@@ -124,6 +124,10 @@ new class extends Component {
             foreach ($this->files as $image) {
                 $photoName = md5(time()) . rand(111,999);
                 $images[] = $image->storeAs('historic_sites', $photoName. '.' .$image->extension(), 'images_public_path');
+
+                $img = Image::read(public_path('images/historic_sites/' . $photoName. '.' .$image->extension()));
+                $img->scale(width: 600);
+                $img->save();
             }
         }
 

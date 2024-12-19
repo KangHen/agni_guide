@@ -74,6 +74,30 @@ class HistoricSiteController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return JsonResource
+     */
+    public function showcase(Request $request): JsonResource
+    {
+        $limit = $request->limit ?? $this->limit;
+        $historicSites = HistoricSite::with([
+                'category' => fn ($q) => $q->select('id', 'name')
+            ])
+            ->publish()
+            ->when($request->pinned, fn ($q) => $q->where('is_pinned', true))
+            ->when($request->pupuler, fn ($q) => $q->orderBy('read_count', 'desc'))
+            ->when($request->explore, function ($q) use ($request) {
+                return $q->where('is_pinned', false)
+                         ->whereNotIn('id', explode(',', $request->exclude));
+            })
+            ->paginate($limit);
+
+        return HistoricSiteResource::collection($historicSites)->additional([
+            'success' => true,
+            'message' => 'Situs berhasil diambil'
+        ]);
+    }
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -89,6 +113,11 @@ class HistoricSiteController extends Controller
         $historicSite = HistoricSite::with('category', 'user')
             ->where('id', $id)
             ->first();
+
+        if ($historicSite) {
+            $historicSite->read_count += 1;
+            $historicSite->save();
+        }
 
         return (new HistoricSiteResource($historicSite))->additional([
             'success' => true,
