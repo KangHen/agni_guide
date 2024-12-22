@@ -29,7 +29,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'city' => 'Tuban',
             'address' => 'Tuban',
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => static::$password ??= Hash::make('tubancitytour101'),
             'remember_token' => Str::random(10),
             'is_active' => 1,
             'role_id' => 0,
