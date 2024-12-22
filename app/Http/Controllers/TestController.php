@@ -10,8 +10,6 @@ class TestController extends Controller
 {
     public function index()
     {
-        $mail = new RegisterVerifyMail(User::find(7), 'token');
-
-        return $mail->render();
+        //echo bcrypt('password');
     }
 }
