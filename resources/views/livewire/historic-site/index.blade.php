@@ -18,6 +18,7 @@ new class extends Component {
     public string $address = '';
     public string $longitude = '';
     public string $latitude = '';
+    public string $vt = '';
     public array $images = [];
     public int $category_id = 0;
 
@@ -86,6 +87,7 @@ new class extends Component {
         $this->address = $site->address;
         $this->longitude = $site->longitude;
         $this->latitude = $site->latitude;
+        $this->vt = $site->vt;
         $this->images = json_decode($site->images);
 
         $this->dispatch('open-edit-modal');
@@ -147,6 +149,7 @@ new class extends Component {
                 'address' => $this->address,
                 'longitude' => $this->longitude,
                 'latitude' => $this->latitude,
+                'vt' => $this->vt,
                 'images' => json_encode($images),
                 'user_id' => auth()->id()
             ]
@@ -221,7 +224,7 @@ new class extends Component {
     #[\Livewire\Attributes\On('reset-form')]
     public function _reset(): void
     {
-        $this->reset('id', 'name', 'category_id', 'description', 'address', 'longitude', 'latitude', 'images');
+        $this->reset('id', 'name', 'category_id', 'description', 'address', 'longitude', 'latitude', 'images', 'vt');
     }
 }; ?>
 
