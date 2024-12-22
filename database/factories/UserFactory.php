@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -32,7 +33,7 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('tubancitytour101'),
             'remember_token' => Str::random(10),
             'is_active' => 1,
-            'role_id' => 0,
+            'role_id' => UserRole::DEV
         ];
     }
 
