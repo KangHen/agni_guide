@@ -18,7 +18,7 @@ use App\Http\Controllers\API\Auth\UpdatePasswordController;
 Route::get('/', function () {
     return response()->json(['message' => 'Agni Guide API v1.0']);
 });
-Route::get('terms', [PageController::class, 'terms'])->name('api.page');
+Route::get('terms', [PageController::class, 'terms'])->name('api.terms');
 
 /** Register Routes */
 Route::post('register', RegisterController::class)->name('api.register');
