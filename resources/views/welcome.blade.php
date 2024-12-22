@@ -65,7 +65,7 @@
             <div class="mr-auto place-self-center lg:col-span-7">
                 <h1
                     class="head-title mb-8 text-6xl font-extrabold bg-gradient-to-r from-red-500 to-orange-400 bg-clip-text text-transparent">
-                    Jelajah Situs <br>Kota Tuban.</h1>
+                    Jelajah Situs <br>Tuban.</h1>
 
                 <div class="lg:hidden md:hidden w-full sm:py-2.5">
                     <img src="{{ asset('hero/hero.webp') }}" class="rounded-full shadow-lg mb-3" alt="hero image">

@@ -55,6 +55,13 @@
                 <x-input-error class="mt-2" :messages="$errors->get('longitude')" />
                 <x-input-error class="mt-2" :messages="$errors->get('latitude')" />
             </div>
+            <div class="grid gap-4 mb-4 grid-cols-2">
+                <div class="col-span-2">
+                    <x-input-label for="name" :value="__('Virtual Tour')" />
+                    <x-text-input wire:model="vt" id="vt" name="vt" type="text" placeholder="Virtual Tour URL" class="mt-1 block w-full placeholder-gray-300" required autofocus />
+                    <x-input-error class="mt-2" :messages="$errors->get('vt')" />
+                </div>
+            </div>
             <div class="grid gap-4 mb-4 grid-cols-2" wire:ignore>
                 <div class="col-span-2">
                     <x-input-label for="name" :value="__('Deskripsi')" />
@@ -62,6 +69,7 @@
                     <x-input-error class="mt-2" :messages="$errors->get('description')" />
                 </div>
             </div>
+
             <div class="flex items-center justify-end gap-4 mt-20">
                 <x-secondary-button x-on:click="$dispatch('close-site-modal')">
                     {{ __('Cancel') }}
