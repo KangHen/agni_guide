@@ -87,7 +87,7 @@ new class extends Component {
         $this->address = $site->address;
         $this->longitude = $site->longitude;
         $this->latitude = $site->latitude;
-        $this->vt = $site->vt;
+        $this->vt = $site->vt ?? '';
         $this->images = json_decode($site->images);
 
         $this->dispatch('open-edit-modal');
