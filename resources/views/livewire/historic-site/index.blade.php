@@ -134,8 +134,8 @@ new class extends Component {
         }
 
         if ($this->id) {
-            $images = $this->images;
-            foreach ($images as $itemAdd) {
+            $imageExist = $this->images;
+            foreach ($imageExist as $itemAdd) {
                 $images[] = $itemAdd;
             }
         }
