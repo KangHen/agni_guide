@@ -100,7 +100,7 @@ $logout = function (Logout $logout) {
                                 <x-dropdown-link :href="route('sale')" wire:navigate>
                                     {{ __('Sale') }}
                                 </x-dropdown-link>
-                                <x-dropdown-link :href="route('sale')" wire:navigate>
+                                <x-dropdown-link :href="route('order')" wire:navigate>
                                     {{ __('Order') }}
                                 </x-dropdown-link>
                             </x-slot>
