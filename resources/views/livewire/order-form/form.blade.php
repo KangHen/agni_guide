@@ -91,6 +91,7 @@ new class extends Component {
 
 <div>
     <x-loading/>
+    <x-application-logo class="w-36 mb-3 mx-auto" />
     <div class="lg:flex md:flex sm:block justify-between items-end">
         <div class="mb-3">
             <h1 class="mb-0 font-bold text-2xl">Form Registrasi</h1>

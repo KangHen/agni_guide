@@ -7,7 +7,8 @@ use App\Http\Controllers\TestController;
 Route::view('/', 'welcome')->name('welcome');
 Route::get('register-verify', RegisterVerifyController::class)->name('register.verify');
 Route::view('order-form', 'order-form')->name('order-form');
-Route::view('order-form-detail/{code}', 'order-form-detail')->name('order-form.show');
+Route::view('order-form-detail/{code}', 'order-form-detail')->name('order-form.detail');
+Route::view('order-form-success', 'order-form-success')->name('order-form.success');
 //Route::get('test', [TestController::class, 'index']);
 
 Route::middleware(['auth', 'verified'])
