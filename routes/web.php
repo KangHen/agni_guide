@@ -24,6 +24,7 @@ Route::middleware(['auth', 'verified'])
         Route::view('sale', 'sale')->name('sale');
         Route::view('product-category', 'product-category')->name('product-category');
         Route::view('order', 'order')->name('order');
+        Route::view('order/product/{id}', 'order-product')->name('order.product');
     });
 
 require __DIR__.'/auth.php';
