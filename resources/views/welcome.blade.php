@@ -98,6 +98,9 @@
             </div>
         </div>
     </section>
+
+    <livewire:welcome.product />
+
     <footer>
         <div class="max-w-screen-xl p-4 py-6 mx-auto lg:py-16 md:p-8 lg:p-10">
             <div class="text-center">

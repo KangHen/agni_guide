@@ -51,9 +51,8 @@ new class extends Component {
                     </svg>
                 </div>
                 <div class="text-center mt-3">
-                    <h3 class="text-lg font-bold">Menunggu Proses Pembayaran</h3>
-                    <p class="mb-3">Mohon bayarkan segera tagihan anda.</p>
-                    <x-primary-button wire:click="pay()">Bayar Sekarang</x-primary-button>
+                    <h3 class="text-lg font-bold">Menunggu Proses Pembayaran / Konfirmasi Pembayaran</h3>
+                    <p class="mb-3">Mohon tunggu sampai proses pembayaran selesai.</p>
                 </div>
             </div>
         @endif

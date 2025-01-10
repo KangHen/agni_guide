@@ -3,13 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Register\RegisterVerifyController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\WebhookXenditController;
 
 Route::view('/', 'welcome')->name('welcome');
 Route::get('register-verify', RegisterVerifyController::class)->name('register.verify');
 Route::view('order-form', 'order-form')->name('order-form');
 Route::view('order-form-detail/{code}', 'order-form-detail')->name('order-form.detail');
 Route::view('order-form-success', 'order-form-success')->name('order-form.success');
-Route::get('test', [TestController::class, 'index']);
+Route::match(['get', 'post'], 'webhook-invoice-payed', WebhookXenditController::class);
 
 Route::middleware(['auth', 'verified'])
     ->group(function () {
@@ -28,3 +29,9 @@ Route::middleware(['auth', 'verified'])
     });
 
 require __DIR__.'/auth.php';
+
+/**
+ * Test
+ */
+//Route::get('test', [TestController::class, 'index']);
+
