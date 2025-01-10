@@ -273,7 +273,7 @@ new class extends Component {
                         @endif
                     </td>
                     <td>{{ $item->name }}</td>
-                    <td>{{ \Illuminate\Support\Number::format($item->price) }}</td>
+                    <td>{{ number_format($item->price) }}</td>
                     <td>
                         <x-select :data="$soldOuts" :value="$item->is_sold_out" wire:change="setSoldOut({{ $item->id }}, $event.target.value)" />
                     </td>
