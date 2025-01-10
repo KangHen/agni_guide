@@ -129,4 +129,7 @@ return [
 
     'default_longitude' => env('DEFAULT_LONGITUDE', 106.8272),
     'default_latitude' => env('DEFAULT_LATITUDE', -6.1754),
+
+    'xendit_api_key' => 'xnd_development_KXX287ZlBbZtooSTxxylsxUTuPOAk04iweTVpOfzTxBxQl2VB3U9fOpxm67svHqg',
+    'xendit_payment' => env('XENDIT_PAYMENT', false)
 ];

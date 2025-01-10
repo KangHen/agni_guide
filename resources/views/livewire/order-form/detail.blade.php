@@ -5,12 +5,15 @@ use App\Models\Order;
 use Livewire\WithFileUploads;
 use Intervention\Image\Laravel\Facades\Image;
 use Illuminate\Support\Facades\File;
+use App\Services\PaymentService;
+use Xendit\Invoice\Invoice;
 
 new class extends Component {
     use WithFileUploads;
 
     public string|null $orderCode;
     public Order|null $order;
+    public object|null $payment;
     public array $atms = [
         'Masukkan kartu ATM dan PIN',
         'Pilih menu Transfer',
@@ -46,6 +49,8 @@ new class extends Component {
         if (!$this->order || !$this->order?->product) {
             $this->redirect('/', navigate: true);
         }
+
+        $this->payment = $this->order->payment_data ? json_decode($this->order->payment_data) : null;
     }
 
     public  function saved(): void
@@ -82,18 +87,63 @@ new class extends Component {
 
         $order->upload_image = $fileName;
         $order->status = 'process';
+        $order->payment_method = 'NON_XENDIT';
 
         if ($order->save()) {
             Image::read($staticUploadPath)
                 ->scale(width: 600);
 
-            session()->put('message', 'Order Berhasil');
-
-            $this->redirect('/order-form-success', navigate: true);
+            $this->redirect('/order-form-success?code=' . $this->orderCode, navigate: true);
         } else {
             $this->reset('file');
             session()->flash('error', 'Upload Gagal!');
         }
+    }
+
+    public function pay(): void
+    {
+        $order = Order::with('product', 'user')
+            ->where('order_code', $this->orderCode)
+            ->first();
+
+        $this->payment = $order->payment_data ? json_decode($order->payment_data) : null;
+
+        if ($order->payment_data && $this->payment->invoice_url) {
+            redirect()->away($this->payment->invoice_url);
+            return;
+        }
+
+        if (!$order->product || !$order->user) {
+            session()->flash('error', 'Terjadi Kesalahan!');
+            $this->redirect('/order-form-detail/' . $this->orderCode, navigate: true);
+        }
+
+        $payment = PaymentService::make($order)->createNewInvoice();
+
+        if ($payment instanceof Invoice) {
+            $order->payment_method = 'XENDIT';
+            $order->payment_data = json_encode([
+                'invoice_url' => $payment['invoice_url'],
+                'invoice_id' => $payment['id'],
+                'expired' => $payment['expiry_date'],
+                'created' => $payment['created_at'],
+                'currency' => $payment['currency']
+            ]);
+
+            if ($order->save()) {
+                redirect()->away($payment['invoice_url']);
+
+                return;
+            }
+
+            session()->flash('error', 'Terjadi Kesahalan!');
+            $this->redirect('/order-form-detail/' . $this->orderCode, navigate: true);
+
+            return;
+        }
+
+        session()->flash('error', $payment->getMessage());
+        $this->redirect('/order-form-detail/' . $this->orderCode, navigate: true);
     }
 }; ?>
 
@@ -159,7 +209,7 @@ new class extends Component {
                             </ul>
                         </div>
 
-                        <div class="p-3 bg-slate-50 rounded-lg flex justify-between">
+                        <div class="p-3 bg-slate-50 rounded-lg flex justify-between mb-3">
                             <div><h1 class="mb-0 font-extrabold text-3xl text-slate-800">Rp {{ number_format($order->grand_total) }}</h1></div>
                             <div>
                                 <x-secondary-button data-nominal="{{ $order->grand_total }}" class="copy-nominal">
@@ -169,6 +219,11 @@ new class extends Component {
                                 </x-secondary-button>
                             </div>
                         </div>
+                        @if (config('app.xendit_payment'))
+                        <x-primary-button class="w-full py-4 px-4" wire:click="pay()">
+                            <span class="text-center w-full">Bayar Sekarang (Otomatis Konfirmasi)</span>
+                        </x-primary-button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -177,7 +232,8 @@ new class extends Component {
 
     <div class="bg-white shadow-md overflow-hidden sm:rounded-lg mx-auto p-6">
         <div class="mb-3">
-            <h1 class="mb-0 font-bold text-2xl mb-3">Upload Bukti Pembayaran</h1>
+            <h1 class="mb-0 font-bold text-2xl">Manual Konfirmasi</h1>
+            <p class="mb-3">Upload Bukti Pembayaran</p>
             <x-input-label :value="__('File')"/>
             <x-text-input accept=".jpg, .jpeg, .png" wire:model="file" id="file" name="file" type="file" class="mt-1 block w-full border p-1" />
             <x-input-error :messages="$errors->get('file')" class="mt-2"/>

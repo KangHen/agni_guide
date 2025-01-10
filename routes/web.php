@@ -9,7 +9,7 @@ Route::get('register-verify', RegisterVerifyController::class)->name('register.v
 Route::view('order-form', 'order-form')->name('order-form');
 Route::view('order-form-detail/{code}', 'order-form-detail')->name('order-form.detail');
 Route::view('order-form-success', 'order-form-success')->name('order-form.success');
-//Route::get('test', [TestController::class, 'index']);
+Route::get('test', [TestController::class, 'index']);
 
 Route::middleware(['auth', 'verified'])
     ->group(function () {
