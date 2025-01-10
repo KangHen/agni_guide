@@ -4,6 +4,7 @@ use Livewire\Volt\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Laravel\Facades\Image;
 
@@ -21,6 +22,7 @@ new class extends Component {
     public int $is_published = 0;
     public int $history_site_id = 0;
     public int $is_sold_out = 0;
+    public int|null $category_id = 0;
 
     public int $no = 1;
     public string|null $search = '';
@@ -28,9 +30,16 @@ new class extends Component {
     public $files;
     public array $productSizes = ['s', 'm', 'l', 'xl', 'xxl'];
     public array $soldOuts = [0 => 'Ready', 1 => 'Habis'];
+    public array|\Illuminate\Support\Collection $productCategories = [];
 
     public  function mount(): void
-    {}
+    {
+        $this->productCategories = ProductCategory::query()
+            ->select('id', 'name')
+            ->pluck('name', 'id')
+            ->prepend('-Pilih Kategori-', 0)
+            ->toArray();
+    }
 
     /**
      * With
@@ -41,6 +50,7 @@ new class extends Component {
         return [
             'items' => Product::query()
                 ->when($this->search, fn($query, $search) => $query->where('name', 'like', '%'.$search.'%'))
+                ->orderByDesc('id')
                 ->paginate(10)
         ];
     }
@@ -54,9 +64,9 @@ new class extends Component {
         $this->validate([
             'name' => 'required',
             'description' => 'required',
-            'price' => 'required',
-            'sizes' => 'required',
-            'files.*' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'category_id' => 'required',
+            'price' => 'required|numeric',
+            'files.*' => 'required|image|mimes:jpeg,png,jpg|max:1024',
             'quantity' => 'required',
         ]);
 
@@ -102,6 +112,7 @@ new class extends Component {
                 'quantity' => $this->quantity,
                 'sizes' => json_encode($this->sizes),
                 'is_sold_out' => 0,
+                'category_id' => $this->category_id,
                 'user_id' => auth()->id(),
                 'history_site_id' => $this->history_site_id,
             ]
@@ -127,6 +138,7 @@ new class extends Component {
         $product = Product::find($id);
 
         $this->id = $product->id;
+        $this->category_id = $product->category_id;
         $this->name = $product->name;
         $this->description = $product->description;
         $this->images = json_decode($product->images);
@@ -213,7 +225,7 @@ new class extends Component {
     #[\Livewire\Attributes\On('reset-form')]
     public function _reset(): void
     {
-        $this->reset('id', 'name', 'description', 'price', 'sizes', 'quantity', 'is_published', 'history_site_id', 'is_sold_out', 'files', 'images');
+        $this->reset('id', 'name', 'description', 'price', 'sizes', 'quantity', 'is_published', 'history_site_id', 'is_sold_out', 'files', 'images', 'category_id');
     }
 }; ?>
 
@@ -247,7 +259,7 @@ new class extends Component {
                 <th>Gambar</th>
                 <th>Judul</th>
                 <th>Price</th>
-                <th>Sold Out</th>
+                <th>Status</th>
                 <th class="w-40">#</th>
             </tr>
             </thead>
