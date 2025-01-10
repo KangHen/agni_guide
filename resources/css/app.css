@@ -31,4 +31,31 @@
     @apply py-3 px-6;
 }
 
+/*media query */
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .sold-out {
+        @apply rounded-3xl;
+    }
+}
 
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    .sold-out {
+        @apply rounded-3xl;
+    }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    .sold-out {
+        @apply rounded-tl-3xl rounded-bl-3xl rounded-br-none rounded-tr-none;
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .sold-out {
+        @apply rounded-tl-3xl rounded-bl-3xl rounded-br-none rounded-tr-none;
+    }
+}

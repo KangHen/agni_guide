@@ -1,8 +1,7 @@
 <?php
 
 use Livewire\Volt\Component;
-use App\Models\Category;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\ProductCategory;
 use Illuminate\Support\Str;
 use Livewire\WithPagination;
 
@@ -28,7 +27,7 @@ new class extends Component {
     public  function with(): array
     {
         return [
-            'items' => Category::query()
+            'items' => ProductCategory::query()
                 ->when($this->search <> null, fn($q) => $q->where('name', 'like', '%'.$this->search.'%'))
                 ->paginate(10)
         ];
@@ -41,11 +40,9 @@ new class extends Component {
      */
     public function edit(int $id): void
     {
-        $category = Category::find($id);
+        $category = ProductCategory::find($id);
         $this->id = $category->id;
         $this->name = $category->name;
-
-        $this->dispatch('open-modal', 'form');
     }
 
     /**
@@ -71,7 +68,7 @@ new class extends Component {
             'name' => ['required', 'string', 'max:255'],
         ]);
 
-        $saved = Category::create([
+        $saved = ProductCategory::create([
             'name' => $this->name,
             'slug' => Str::slug($this->name),
             'user_id' => auth()->id()
@@ -84,7 +81,7 @@ new class extends Component {
             session()->flash('error', 'Error Created');
         }
 
-        $this->redirect('/category', navigate: true);
+        $this->redirect('/product-category', navigate: true);
     }
 
     /**
@@ -97,7 +94,7 @@ new class extends Component {
             'name' => ['required', 'string', 'max:255'],
         ]);
 
-        $saved = Category::where('id', $this->id)
+        $saved = ProductCategory::where('id', $this->id)
             ->update([
                 'name' => $this->name,
                 'slug' => Str::slug($this->name),
@@ -110,7 +107,7 @@ new class extends Component {
             session()->flash('error', 'Error Updated');
         }
 
-        $this->redirect('/category', navigate: true);
+        $this->redirect('/product-category', navigate: true);
     }
 
     /**
@@ -119,7 +116,7 @@ new class extends Component {
      */
     public function delete(): void
     {
-        $setting = Category::find($this->id);
+        $setting = ProductCategory::find($this->id);
         $this->id = 0;
 
         if ($setting->delete()) {
@@ -128,7 +125,7 @@ new class extends Component {
             session()->flash('error', 'Error Deleted');
         }
 
-        $this->redirect('/category', navigate: true);
+        $this->redirect('/product-category', navigate: true);
     }
 
     /**
@@ -144,8 +141,7 @@ new class extends Component {
      * Reset Setting
      * @return void
      */
-    #[\Livewire\Attributes\On('reset-form')]
-    public function _reset(): void
+    private function _reset(): void
     {
         $this->reset('id', 'name');
     }
@@ -160,7 +156,7 @@ new class extends Component {
         </div>
 
         <x-create-button x-on:click.prevent="$dispatch('open-modal', 'form')">
-            Buat Kategori
+            Buat Kategori Produk
         </x-create-button>
     </div>
     <div class="relative overflow-x-auto">
@@ -195,7 +191,7 @@ new class extends Component {
         </div>
     </div>
 
-    @include('livewire.setting.category.form')
+    @include('livewire.product-category.form')
 
     <x-modal name="confirm-category-deleted" :show="$errors->isNotEmpty()" maxWidth="sm">
         <div class="p-5">
@@ -222,12 +218,9 @@ new class extends Component {
 
         $wire.on('cancel-delete', () => {
             $wire.set('id', 0);
-            $wire.dispatch('close-modal', 'confirm-category-deleted');
-        });
-
-        $wire.on('close-modal', () => {
-            $wire.dispatch('reset-form');
+            $wire.dispatch('close-modal', 'confirm-user-deleted');
         });
     </script>
     @endscript
 </div>
+

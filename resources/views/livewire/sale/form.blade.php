@@ -14,6 +14,13 @@
         <form class="p-4 md:p-5">
             <div class="grid gap-4 mb-4 grid-cols-2">
                 <div class="col-span-2">
+                    <x-input-label for="name" :value="__('Kategori')" />
+                    <x-select :data="$productCategories" wire:model="category_id"/>
+                    <x-input-error class="mt-2" :messages="$errors->get('category_id')" />
+                </div>
+            </div>
+            <div class="grid gap-4 mb-4 grid-cols-2">
+                <div class="col-span-2">
                     <x-input-label for="name" :value="__('Nama')" />
                     <x-text-input wire:model="name" id="name" name="name" type="text" placeholder="Nama Produk" class="mt-1 block w-full placeholder-gray-300" required autofocus />
                     <x-input-error class="mt-2" :messages="$errors->get('name')" />

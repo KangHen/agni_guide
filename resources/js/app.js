@@ -5,11 +5,14 @@ import Chart from 'chart.js/auto';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import anime from 'animejs/lib/anime.es.js';
 import 'animate.css';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 
 window.Quill = Quill;
 window.mapboxgl = mapboxgl;
 window.Chart = Chart;
 window.anime = anime;
+window.Notyf = Notyf;
 
 
 const createAnimation = () => {

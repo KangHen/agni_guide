@@ -64,6 +64,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'upload_public_path' => [
+            'driver' => 'local',
+            'root' => public_path('uploads'),
+            'url' => env('APP_URL').'/public',
+            'visibility' => 'public',
+        ],
+
     ],
 
     /*
