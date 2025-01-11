@@ -15,12 +15,15 @@ new class extends Component {
     public string|null $address;
     public int $quantity = 1;
     public int $product_id = 0;
+    public string $referral;
     public string $image = '';
 
     public Product|null $product;
     public $data;
+    public array $referrals = [];
 
-    public function mount(string|null $payload): void
+
+    public function mount(string|null $payload, string|null $referral = null): void
     {
         if (!$payload) {
             redirect()->route('welcome');
@@ -39,6 +42,17 @@ new class extends Component {
 
             $images = $this->product->images ? json_decode($this->product->images) : [];
             $this->image = $images ? asset('images/products/' . $images[0]) : '';
+
+            $this->referrals = User::query()
+                ->whereIn('role_id', [UserRole::ADMIN, UserRole::MEMBER])
+                ->where('is_active', true)
+                ->get()
+                ->pluck('name', 'referral_code')
+                ->prepend('AGNI GUIDE TEAM', 'AGNIGUIDE')
+                ->toArray();
+
+            $this->referral = $referral ?? 'AGNIGUDE';
+
         } catch (Exception $e) {
             redirect()->route('welcome');
         }
@@ -82,10 +96,17 @@ new class extends Component {
                 'discount' => 0,
                 'total' => $this->product->price,
                 'status' => 'pending',
-                'grand_total' => $this->product->price * $this->quantity
+                'grand_total' => $this->product->price * $this->quantity,
+                'referral_code' => $this->referral
             ]);
 
-        $this->redirect('/order-form-detail/' . $orderCode, navigate: true );
+        if ($order) {
+            $this->redirect('/order-form-detail/' . $orderCode, navigate: true );
+
+            return;
+        }
+
+        session()->flash('error', 'Terjadi Kesalahan!');
     }
 }; ?>
 
@@ -106,15 +127,19 @@ new class extends Component {
         <div class="bg-white">
             <div class="p-6 text-gray-900">
                 <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2  gap-4">
-                    <div></div>
                     <div>
+                        <x-input-label for="email" :value="__('Dapat informasi dari')"/>
+                        <x-select wire:model="referral" :data="$referrals"></x-select>
+                    </div>
+                    <div>
+                        <x-input-label for="email" :value="__('Jumlah Pembelian')"/>
                         <div class="flex">
                             <span
                                 class="quantity-minus cursor-pointer inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                   class="bi bi-plus-lg" viewBox="0 0 16 16">
-                                  <path fill-rule="evenodd"
-                                        d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                     class="bi bi-dash-lg" viewBox="0 0 16 16">
+                                  <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8"/>
                               </svg>
                             </span>
                             <input wire:model="quantity" type="text" min="1"
@@ -122,8 +147,9 @@ new class extends Component {
                                   placeholder="1">
                             <span wire:click="quantity++" class="cursor-pointer inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-s-0 border-gray-300 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                   class="bi bi-dash-lg" viewBox="0 0 16 16">
-                                  <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8"/>
+                                   class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                  <path fill-rule="evenodd"
+                                        d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
                               </svg>
                             </span>
                         </div>

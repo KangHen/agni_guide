@@ -159,6 +159,87 @@ $logout = function (Logout $logout) {
             </x-responsive-nav-link>
         </div>
 
+        <div class="sm:flex sm:items-center sm:ms-6 {{ request()->routeIs('setting.*') ? 'border-b-2 border-orange-400' : '' }}">
+            <x-dropdown align="left" width="48">
+                <x-slot name="trigger">
+                    <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                        <div x-data="{{ json_encode(['name' => 'Setting']) }}" x-text="name"></div>
+
+                        <div class="ms-1">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </button>
+                </x-slot>
+
+                <x-slot name="content">
+                    <x-dropdown-link :href="route('setting.user')" wire:navigate>
+                        {{ __('User') }}
+                    </x-dropdown-link>
+                    <x-dropdown-link :href="route('setting.category')" wire:navigate>
+                        {{ __('Kategori') }}
+                    </x-dropdown-link>
+                </x-slot>
+            </x-dropdown>
+        </div>
+        <x-nav-link class="ps-3" :href="route('historic-site')" :active="request()->routeIs('historic-site')" wire:navigate>
+            {{ __('Situs') }}
+        </x-nav-link>
+        <div class="sm:flex sm:items-center sm:ms-6 {{ request()->routeIs('post') || request()->routeIs('page') ? 'border-b-2 border-orange-400' : '' }}">
+            <x-dropdown align="left" width="48">
+                <x-slot name="trigger">
+                    <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                        <div x-data="{{ json_encode(['name' => 'Posts']) }}" x-text="name"></div>
+
+                        <div class="ms-1">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </button>
+                </x-slot>
+
+                <x-slot name="content">
+                    <x-dropdown-link :href="route('page')" wire:navigate>
+                        {{ __('Page') }}
+                    </x-dropdown-link>
+                    <x-dropdown-link :href="route('post')" wire:navigate>
+                        {{ __('Post') }}
+                    </x-dropdown-link>
+                </x-slot>
+            </x-dropdown>
+        </div>
+
+        <div class="sm:flex sm:items-center sm:ms-6 {{ request()->routeIs('sale') ? 'border-b-2 border-orange-400' : '' }}">
+            <x-dropdown align="left" width="48">
+                <x-slot name="trigger">
+                    <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                        <div x-data="{{ json_encode(['name' => 'Product']) }}" x-text="name"></div>
+
+                        <div class="ms-1">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </button>
+                </x-slot>
+
+                <x-slot name="content">
+                    <x-dropdown-link :href="route('product-category')" wire:navigate>
+                        {{ __('Kategori') }}
+                    </x-dropdown-link>
+                    <x-dropdown-link :href="route('sale')" wire:navigate>
+                        {{ __('Sale') }}
+                    </x-dropdown-link>
+                    <x-dropdown-link :href="route('order')" wire:navigate>
+                        {{ __('Order') }}
+                    </x-dropdown-link>
+                </x-slot>
+            </x-dropdown>
+        </div>
+
+
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">

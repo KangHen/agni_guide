@@ -137,6 +137,7 @@ new class extends Component {
                 <th>Alamat</th>
                 <th>Bukti</th>
                 <th>Status</th>
+                <th>Referral</th>
                 <th class="w-40">#</th>
             </tr>
             </thead>
@@ -160,6 +161,9 @@ new class extends Component {
                     </td>
                     <td>
                         {{ $item->status }}
+                    </td>
+                    <td>
+                        {{ $item->referral_code }}
                     </td>
                     <td>
 

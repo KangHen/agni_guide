@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Laravel\Facades\Image;
+use Illuminate\Support\Facades\Crypt;
 
 new class extends Component {
     use WithPagination, WithFileUploads;
@@ -32,6 +33,9 @@ new class extends Component {
     public array $soldOuts = [0 => 'Ready', 1 => 'Habis'];
     public array|\Illuminate\Support\Collection $productCategories = [];
 
+    public string|null $referralCode = null;
+    public string|null $link = null;
+
     public  function mount(): void
     {
         $this->productCategories = ProductCategory::query()
@@ -39,6 +43,8 @@ new class extends Component {
             ->pluck('name', 'id')
             ->prepend('-Pilih Kategori-', 0)
             ->toArray();
+
+        $this->referralCode = auth()->user() ? auth()->user()->referral_code : null;
     }
 
     /**
@@ -219,6 +225,24 @@ new class extends Component {
     }
 
     /**
+     * Shared
+     * @return void
+     */
+    public function shared(int $id): void
+    {
+        $data = [
+            'product_id' => $id,
+            'coupon' => null,
+            'discount' => 0
+        ];
+
+        $payload = Crypt::encryptString(json_encode($data));
+
+        $this->link = route('order-form', ['agid' => $payload, 'ref' => $this->referralCode]);
+        $this->dispatch('open-modal', 'share-modal');
+    }
+
+    /**
      * Reset
      * @return void
      */
@@ -278,6 +302,7 @@ new class extends Component {
                         <x-select :data="$soldOuts" :value="$item->is_sold_out" wire:change="setSoldOut({{ $item->id }}, $event.target.value)" />
                     </td>
                     <td>
+                        <x-share-button wire:click="shared({{ $item->id }})" />
                         <x-edit-button wire:click="edit({{ $item->id }})" />
                         <x-delete-button x-on:click.prevent="$dispatch('confirm-delete', {{ $item->id }})" />
                     </td>
@@ -313,6 +338,24 @@ new class extends Component {
         </div>
     </x-modal>
 
+    <x-modal name="share-modal" :show="$errors->isNotEmpty()">
+        <div class="p-5">
+            <h3 class="text-lg font-bold">Share</h3>
+            <p class="p-3 bg-slate-100 rounded-lg mb-3 break-all">
+                {{ str($link)->wordWrap(100)->limit() }}
+            </p>
+            <div class="modal-action">
+                <x-secondary-button x-on:click="$dispatch('close-modal','share-modal')">
+                    {{ __('Batalkan') }}
+                </x-secondary-button>
+
+                <x-primary-button data-url="{{ $link }}" class="ms-3 copy-url-shared">
+                    {{ __('Copy') }}
+                </x-primary-button>
+            </div>
+        </div>
+    </x-modal>
+
     @script
     <script>
         $wire.on('open-edit-modal', () => {
@@ -343,6 +386,18 @@ new class extends Component {
             quill.root.innerHTML = '';
             $wire.dispatch('reset-form');
             $wire.dispatch('close-modal', 'form');
+        });
+
+        const copyUrl = document.querySelector('.copy-url-shared');
+        copyUrl.addEventListener('click', (e) => {
+            e.preventDefault();
+            const URL = e.target.getAttribute('data-url');
+            navigator.clipboard.writeText(URL).then(() => {
+                const notify = new Notyf();
+                notify.success('Link berhasil disalin');
+            }).catch(err => {
+                console.error('Error copying text: ', err);
+            });
         });
     </script>
     @endscript
