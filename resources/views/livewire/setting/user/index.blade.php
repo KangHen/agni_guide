@@ -138,6 +138,7 @@ new class extends Component {
             'address' => $this->address,
             'city' => $this->city,
             'is_active' => 1,
+            'referral_code' => str($this->name)->slug()->replace('-','')->upper()
             //'avatar' => $name,
         ]);
 
