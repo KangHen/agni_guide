@@ -27,7 +27,7 @@ new class extends Component {
 }; ?>
 
 <div>
-    @if($order && $order->upload_image && $order->payment_method == 'NOT_XENDIT')
+    @if($order && $order->status <> 'done' && $order->payment_method <> 'XENDIT')
         <div class="bg-white shadow-md overflow-hidden sm:rounded-lg mx-auto p-6">
             <div class="text-green-500 flex justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
