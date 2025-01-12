@@ -15,7 +15,7 @@ new class extends Component {
     public string|null $address;
     public int $quantity = 1;
     public int $product_id = 0;
-    public string $referral;
+    public string|null $referral = null;
     public string $image = '';
 
     public Product|null $product;
@@ -23,7 +23,7 @@ new class extends Component {
     public array $referrals = [];
 
 
-    public function mount(string|null $payload, string|null $referral = null): void
+    public function mount(string|null $payload, $referr = null): void
     {
         if (!$payload) {
             redirect()->route('welcome');
@@ -51,7 +51,7 @@ new class extends Component {
                 ->prepend('AGNI GUIDE TEAM', 'AGNIGUIDE')
                 ->toArray();
 
-            $this->referral = $referral ?? 'AGNIGUDE';
+            $this->referral = $referr ?? 'AGNIGUDE';
 
         } catch (Exception $e) {
             redirect()->route('welcome');
