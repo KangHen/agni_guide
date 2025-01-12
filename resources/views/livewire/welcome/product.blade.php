@@ -59,7 +59,7 @@ new class extends Component {
         <div class="mx-auto mt-16 grid max-w-lg grid-cols-1 items-center gap-y-6 sm:mt-20 sm:gap-y-0 lg:max-w-4xl lg:grid-cols-2">
             @foreach($cityTours as $ct)
             @if ($loop->index == 1 || $cityTours->count() == 1)
-            <div class="relative rounded-3xl rounded-t-3xl bg-slate-50 p-8 ring-1 ring-gray-900/10 sm:mx-8 sm:rounded-b-none sm:p-10 lg:mx-0 lg:rounded-bl-3xl lg:rounded-tr-none">
+            <div class="relative rounded-3xl bg-slate-50 p-8 ring-1 ring-gray-900/10 sm:mx-8 sm:p-10 lg:mx-0">
                 <h3 id="tier-hobby" class="text-base/7 font-semibold text-gray-500">{{ $ct->name }}</h3>
                 <p class="mt-4 flex items-baseline gap-x-2 mb-3">
                     <span class="text-5xl font-semibold tracking-tight text-gray-500">{{ number_format($ct->price) }}</span>
@@ -67,7 +67,7 @@ new class extends Component {
                 </p>
                 <img class="w-100 rounded-lg grayscale" src="{{ asset('images/products/' .$ct->image) }}" />
 
-                <div class="sold-out absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                <div class="rounded-3xl absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                   <span class="text-white text-lg font-bold uppercase bg-red-600 px-4 py-2 rounded-lg shadow-lg">
                     Sold Out
                   </span>

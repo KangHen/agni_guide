@@ -34,6 +34,7 @@ new class extends Component {
     ];
 
     public $file;
+    public $bankTransfer;
 
     public function mount(string $code): void
     {
@@ -51,6 +52,7 @@ new class extends Component {
         }
 
         $this->payment = $this->order->payment_data ? json_decode($this->order->payment_data) : null;
+        $this->bankTransfer = bankTransfer();
     }
 
     public  function saved(): void
@@ -183,7 +185,11 @@ new class extends Component {
                         </div>
                     </div>
                     <div>
-                        <h1 class="mb-0 font-bold text-2xl">Cara Pembayaran</h1>
+                        <h1 class="mb-2 font-bold text-2xl">Cara Pembayaran</h1>
+                        <div class="w-full">
+                            <div><img src="{{ url($bankTransfer->logo) }}" /></div>
+                            <div class="mb-3 font-bold text-slate-800">{{ $bankTransfer->account_number }} An . {{ $bankTransfer->account_name }}</div>
+                        </div>
                         <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
                             <ul class="flex flex-wrap -mb-px" id="transfer">
                                 <li class="me-2">
