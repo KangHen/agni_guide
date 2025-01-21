@@ -124,13 +124,13 @@ return [
     ],
 
     'mapbox_access_token' => env('MAPBOX_ACCESS_TOKEN'),
-    'sanctum_token' => env('SANCTUM_TOKEN', 'pUCEgEihsvSRyNKvXjNvFkKgGafMPHoPJcenKmwfGuRSGmifeN'),
-    'defuse_encryption_key' => env('DEFUSE_ENCRYPTION_KEY', 'def00000f3b1e7'),
+    'sanctum_token' => env('SANCTUM_TOKEN', 'sanctum'),
+    'defuse_encryption_key' => env('DEFUSE_ENCRYPTION_KEY'),
 
     'default_longitude' => env('DEFAULT_LONGITUDE', 106.8272),
     'default_latitude' => env('DEFAULT_LATITUDE', -6.1754),
 
-    'xendit_api_key' => 'xnd_development_KXX287ZlBbZtooSTxxylsxUTuPOAk04iweTVpOfzTxBxQl2VB3U9fOpxm67svHqg',
+    'xendit_api_key' => env('XENDIT_API_KEY'),
     'xendit_payment' => env('XENDIT_PAYMENT', false),
-    'xendit_token_callback' => 'yDkM89Qp5Ke6i6Aji2AWYbuzNpHIjHMDJHCxwPPOTWv8EXzT'
+    'xendit_token_callback' => env('XENDIT_TOKEN_CALLBACK'),
 ];
