@@ -160,6 +160,7 @@ new class extends Component {
             <tr>
                 <th class="w-12">No.</th>
                 <th>Nama Peserta</th>
+                <th>QTY</th>
                 <th>Email</th>
                 <th>No Telepon</th>
                 <th>Alamat</th>
@@ -174,6 +175,7 @@ new class extends Component {
                 <tr>
                     <td data-label="No">{{ $no++ }}</td>
                     <td data-label="Nama Peserta">{{ $item->user->name }}</td>
+                    <td data-label="Nama Peserta">{{ $item->quantity }}</td>
                     <td data-label="Email">{{ $item->user->email }}</td>
                     <td data-label="No Telepon">{{ $item->user->phone }}</td>
                     <td data-label="Alamat">{{ $item->user->address }}</td>
