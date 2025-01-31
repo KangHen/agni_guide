@@ -93,6 +93,24 @@ new class extends Component {
     }
 
     /**
+     * delete function
+     * @return void
+     * */
+    public function delete(): void
+    {
+        $order = Order::find($this->id);
+
+        if ($order) {
+            $order->delete();
+            session()->flash('message', 'Deleted Successfully');
+        } else {
+            session()->flash('message', 'Failed to delete');
+        }
+
+        $this->redirect('/order/product/' . $this->productId , navigate: true);
+    }
+
+    /**
      * filtered function
      * @return void
      */
@@ -166,7 +184,7 @@ new class extends Component {
                         {{ $item->referral_code }}
                     </td>
                     <td>
-
+                        <x-delete-button x-on:click.prevent="$dispatch('confirm-delete', {{ $item->id }})" />
                     </td>
                 </tr>
             @empty
@@ -207,4 +225,33 @@ new class extends Component {
         </div>
     </x-modal>
 
+    <x-modal name="confirm-order-deleted" :show="$errors->isNotEmpty()" maxWidth="sm">
+        <div class="p-5">
+            <h3 class="text-lg font-bold">Hapus</h3>
+            <p class="py-4">Yakin hapus data ini?</p>
+            <div class="modal-action">
+                <x-secondary-button x-on:click="$dispatch('cancel-delete')">
+                    {{ __('Batalkan') }}
+                </x-secondary-button>
+
+                <x-danger-button wire:click="delete" class="ms-3">
+                    {{ __('Hapus') }}
+                </x-danger-button>
+            </div>
+        </div>
+    </x-modal>
+
+    @script
+    <script>
+        $wire.on('confirm-delete', (id) => {
+            $wire.set('id', id);
+            $wire.dispatch('open-modal', 'confirm-order-deleted');
+        });
+
+        $wire.on('cancel-delete', () => {
+            $wire.set('id', 0);
+            $wire.dispatch('close-modal', 'confirm-order-deleted');
+        });
+    </script>
+    @endscript
 </div>
