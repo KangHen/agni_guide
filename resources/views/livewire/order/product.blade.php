@@ -18,6 +18,8 @@ new class extends Component {
     public int $processCount = 0;
     public string|null $image;
 
+    public int $paginate = 10;
+
     public function mount(int $id = 0): void {
         if (!$id) {
             $this->redirect('/order');
@@ -30,6 +32,11 @@ new class extends Component {
             ->count();
     }
 
+    public function updatedPage($page)
+    {
+        $this->no = (($page-1)*$this->paginate) + 1;
+    }
+
     public function with(): array {
         return [
             'items' => Order::with('user')
@@ -37,7 +44,7 @@ new class extends Component {
                 ->whereHas('user')
                 ->when($this->search, fn($query, $search) => $query->whereHas('user', fn($q) => $q->where('name', 'like', '%'.$search.'%')))
                 ->when($this->filter_status <> 'semua', fn($query) => $query->where('status', $this->filter_status))
-                ->paginate(10)
+                ->paginate($this->paginate)
         ];
     }
 
@@ -117,6 +124,9 @@ new class extends Component {
     public  function filtered(): void
     {
         $this->resetPage();
+        if (request()->get('page') > 1) {
+            $this->no = ((request()->get('page')-1)*$this->paginate) + 1;
+        }
     }
 }; ?>
 
@@ -217,7 +227,7 @@ new class extends Component {
                 <img src="{{ $image }}" class="w-full rounded-md"/>
             </div>
             <div class="flex items-center justify-between gap-4 p-4">
-                <x-secondary-button x-on:click="$dispatch('close)">
+                <x-secondary-button x-on:click="$dispatch('cancel-delete')">
                     {{ __('Tolak') }}
                 </x-secondary-button>
                 <x-primary-button wire:click="saved()">{{ __('Setujui') }}</x-primary-button>
